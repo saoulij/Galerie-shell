@@ -27,3 +27,26 @@ generate_img_fragment () {
     echo "        <img src=$1 alt=$(basename -s .jpg $1)>"
     echo ""
 }
+
+generate_galerie () {
+    for img in *.jpg;
+    do
+      if [ -f "$img" ];
+      then
+        if [ ! -f "v_$img" ];
+        then
+          gmic "$img" -cubism , -resize 200,200 -output "v_$img"
+        fi
+        generate_img_fragment "v_$img"
+      fi
+    done
+}
+
+galerie_main () {
+  (
+  html_head "Test de la génération de HTML"
+  html_title 'Galerie HTML'
+  generate_galerie
+  html_tail
+  ) > index.html
+}
