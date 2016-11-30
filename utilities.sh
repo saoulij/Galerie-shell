@@ -29,24 +29,29 @@ generate_img_fragment () {
 }
 
 generate_galerie () {
-    for img in *.jpg;
+    for img in $(ls "$1/"*.jpg);
     do
-      if [ -f "$img" ];
+      if [ -r "$img" ];
       then
-        if [ ! -f "v_$img" ];
-        then
-          gmic "$img" -cubism , -resize 200,200 -output "v_$img"
-        fi
-        generate_img_fragment "v_$img"
+        if [ ! -d "$2" ];
+          then
+            mkdir "$2"
+          fi
+          vignette="$2/$(basename $img)"
+          if [ ! -f "$2/$img" ];
+          then
+            gmic "$img" -cubism , -resize 200,200 -output "$vignette"
+          fi
+        generate_img_fragment "$vignette"
       fi
     done
 }
 
-galerie_main () {
+galerie_main () { #param: 1=source, 2=dest, 3=index
   (
   html_head "Test de la génération de HTML"
   html_title 'Galerie HTML'
-  generate_galerie
+  generate_galerie "$1" "$2"
   html_tail
-  ) > index.html
+  ) > "$3"
 }
