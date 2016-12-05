@@ -2,11 +2,11 @@
 
 DIR=$(cd "$(dirname "$0")" && pwd)
 
-SOURCE="."
-DEST="."
+SOURCE="$DIR"
+DEST="$DIR"
 VERB=0
 FORCE=0
-INDEX="index.html"
+INDEX="$DIR"/"index.html"
 HELP=0
 
 while [ $# -gt 0 ]
