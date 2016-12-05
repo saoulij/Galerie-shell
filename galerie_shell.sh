@@ -51,4 +51,4 @@ fi
 
 . "$DIR"/utilities.sh
 
-galerie_main
+galerie_main "$SOURCE" "$DEST" "$FORCE" "$INDEX"
