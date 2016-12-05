@@ -6,7 +6,7 @@ SOURCE="$DIR"
 DEST="$DIR"
 VERB=0
 FORCE=0
-INDEX="$DIR"/"index.html"
+INDEX="index.html"
 HELP=0
 
 while [ $# -gt 0 ]
@@ -15,11 +15,12 @@ key="$1"
 
 case $key in
   --source)
-    SOURCE="$2"
+    SOURCE="$(cd "$2"; pwd)"
     shift
     ;;
   --dest)
-    DEST="$2"
+    if [ ! -d "$2" ]; then mkdir -p "$2"; fi
+    DEST="$(cd "$2"; pwd)"
     shift
     ;;
   --verb)
@@ -51,4 +52,4 @@ fi
 
 . "$DIR"/utilities.sh
 
-galerie_main "$SOURCE" "$DEST" "$FORCE" "$INDEX"
+galerie_main "$SOURCE" "$DEST" "$FORCE" "$DEST/$INDEX"
