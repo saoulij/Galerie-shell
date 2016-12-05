@@ -38,7 +38,7 @@ generate_galerie () {
             mkdir "$2"
           fi
           vignette="$2/$(basename $img)"
-          if [ ! -f "$2/$img" ];
+          if [ ! -f "$2/$img" ] || [ "$3" ];
           then
             gmic "$img" -cubism , -resize 200,200 -output "$vignette"
           fi
@@ -47,11 +47,11 @@ generate_galerie () {
     done
 }
 
-galerie_main () { #param: 1=source, 2=dest, 3=index
+galerie_main () {
   (
   html_head "Test de la génération de HTML"
   html_title 'Galerie HTML'
-  generate_galerie "$1" "$2"
+  generate_galerie "$1" "$2" "$3"
   html_tail
-  ) > "$3"
+  ) > "$4"
 }
