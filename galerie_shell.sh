@@ -40,6 +40,19 @@ esac
 shift
 done
 
+if [ $HELP -ne 0 ]
+then
+  echo "usage: ./galerie_shell.sh [--source REP] [--dest REP] [--verb] [--force] [--help] [--index FICHIER]
+  --source REP : Répertoire contenant les images JPEG à miniaturiser.
+  --dest REP : Répertoire cible (où on va générer les vignettes et le fichier HTML).
+  --verb : mode \"verbeux\".
+  --force : Forcer la création de vignette, même si la vignette existe déjà.
+  --help : Afficher la liste des options disponibles, et quitter.
+  --index FICHIER : générer la galerie dans le fichier spécifié au lieu de générer un fichier index.html.
+  "
+  exit 0
+fi
+
 if [ $VERB -ne 0 ]
 then
   echo "SOURCE=$SOURCE"
