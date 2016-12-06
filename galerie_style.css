@@ -1,0 +1,41 @@
+body {
+    background-color: #DCDCDC;
+    font-size: 100%;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3em;
+  font-family: Verdana, Sans-Serif;
+}
+
+div.imageframe {
+  float: left;
+  background-color: white;
+  border: 1px dashed #C0C0C0;
+  padding: 15px;
+  margin: 8px;
+  text-align: center;
+}
+
+.image {
+  display: block;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.legend {
+  font-style: italic;
+  font-family: "Times New Roman", Serif;
+  font-size: 1.5em;
+}
+
+a {
+  display: block;
+  transition: 0.3s;
+}
+
+a:hover {
+  background-color: black;
+  box-shadow: 0 0 2px 2px black;
+}
