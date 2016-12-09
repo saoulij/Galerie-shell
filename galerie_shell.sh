@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DIR=$(cd "$(dirname "$0")" && pwd)
 
@@ -15,6 +15,10 @@ key="$1"
 
 case $key in
   --source)
+    if [ ! -d "$2" ]; then
+      echo "$2: no such directory"
+      exit 1
+    fi
     SOURCE="$(cd "$2"; pwd)"
     shift
     ;;
@@ -33,6 +37,12 @@ case $key in
     HELP=1
     ;;
   --index)
+    filename="$(basename "$2")"
+    extension="${filename##*.}"
+    if [ "$extension" != ".jpg" ]; then
+      echo "$2: extension should be '.html'"
+      exit 1
+    fi
     INDEX="$2"
     shift
     ;;
@@ -66,3 +76,10 @@ fi
 . "$DIR"/utilities.sh
 
 galerie_main "$SOURCE" "$DEST" "$FORCE" "$DEST/$INDEX"
+
+if [ -f "$INDEX" ]
+then
+    echo "Now run 'firefox $INDEX' to check the result"
+else
+    echo "ERROR: $INDEX was not generated"
+fi
