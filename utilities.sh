@@ -1,56 +1,42 @@
-#! /bin/sh
+#! /bin/bash
 
 html_head () {
-  pagename="$1"
-  title="$2"
-  css="$3"
-
-cat << EOF > "$pagename"
+  cat << EOF > "$1"
 <!DOCTYPE html>
   <html>
-      <head>
-          <meta charset=utf-8 />
-          <title>$title</title>
-          <style>
+    <head>
+        <meta charset=utf-8 />
+        <title>$2</title>
+        <style>
 EOF
-cat "$css" >> "$pagename"
-cat << EOF >> "$pagename"
-          </style>
-      </head>
+  cat "$3" >> "$1"
+  cat << EOF >> "$1"
+        </style>
+    </head>
 
-      <body>
+    <body>
 EOF
 }
 
 html_title () {
-  pagename="$1"
-  title="$2"
-
-cat << EOF >> "$pagename"
-       <h1>$title</h1>
+  cat << EOF >> "$1"
+       <h1>$2</h1>
 
 EOF
 }
 
 html_tail () {
-  pagename="$1"
-
-cat << EOF >> "$pagename"
-    </body>
-</html>
+  cat << EOF >> "$1"
+      </body>
+  </html>
 EOF
 }
 
 generate_img_fragment () {
-  index="$1"
-  source="$2"
-  imgname="$(basename -s .jpg "$2")"
-  pagename="$3/$imgname.html"
-
-cat << EOF >> "$index"
+  cat << EOF >> "$INDEX"
         <div class="imageframe">
-        <a href="$pagename">
-        <img class="image" src=$source alt=$imgname>
+        <a href="$DEST/$imgname.html">
+        <img class="image" src=$vignette alt=$imgname>
         </a><br>
         <span class="legend">$imgname</span>
         </div>
@@ -58,67 +44,80 @@ cat << EOF >> "$index"
 EOF
 }
 
+generate_navi () {
+  if [ $i -ne 0 ]; then
+    p=$(($i-1))
+    prec="$DEST/$(basename -s .jpg ${IMG[p]}).html"
+    cat << EOF >> "$1"
+          <li><a href="$prec">Précédent</a></li>
+EOF
+fi
+
+  if [ $i -ne $(( ${#IMG[@]} - 1 )) ]; then
+    s=$(($i+1))
+    suiv="$DEST/$(basename -s .jpg ${IMG[s]}).html"
+    cat << EOF >> "$1"
+        <li><a href="$suiv">Suivant</a></li>
+EOF
+  fi
+
+  cat << EOF >> "$1"
+          <li><a href="$INDEX">Retour à la galerie</a></li>
+          </ul>
+
+EOF
+}
+
 generate_img_html () {
-  imgsource="$1"
-  imgname="$3"
-  pagename="$2/$imgname.html"
-  index="$4"
+  html_head "$1" "$imgname" "image_style.css"
+  html_title "$1" "$imgname"
 
-  html_head "$pagename" "$imgname" "image_style.css"
-  html_title "$pagename" "$imgname"
-
-cat << EOF >> "$pagename"
+  cat << EOF >> "$1"
         <div class="imageframe">
-        <img class="image" src=$imgsource alt=$imgname><br>
+        <img class="image" src=$SOURCE/$imgname.jpg alt=$imgname><br>
         </div>
 
         <ul>
-        <li><a href="$index">Retour à la galerie</a></li>
-        </ul>
 
 EOF
 
-  html_tail "$pagename"
+  generate_navi "$1"
+  html_tail "$1"
 }
 
 generate_galerie () {
-  source="$1"
-  dest="$2"
-  force="$3"
-  index="$4"
+    if [ ! -d "$DEST/vignette" ];
+    then
+      mkdir "$DEST/vignette"
+    fi
 
-    for img in "$source"/*.jpg;
+    for i in "${!IMG[@]}";
     do
-      if [ -r "$img" ];
+      if [ -r "${IMG[i]}" ];
       then
-
-        if [ ! -d "$dest/vignette" ];
+          imgname="$(basename -s .jpg "${IMG[i]}")"
+          vignette="$DEST/vignette/$(basename "${IMG[i]}")"
+          if [ ! -f "$vignette" ] || [ "$FORCE" -eq 1 ];
           then
-            mkdir "$dest/vignette"
+            gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette"
           fi
 
-          vignette="$dest/vignette/$(basename "$img")"
-
-          if [ ! -f "$vignette" ] || [ "$force" -eq 1 ];
-          then
-            gmic "$img" -cubism , -resize 200,200 -output "$vignette"
-          fi
-
-        generate_img_fragment "$index" "$vignette" "$dest"
-        generate_img_html "$source" "$dest" "$(basename -s .jpg "$vignette")" "$index"
+      generate_img_fragment
+      generate_img_html "$DEST/$imgname.html"
 
       fi
     done
 }
 
 galerie_main () {
-  source="$1"
-  dest="$2"
-  force="$3"
-  index="$4"
+  SOURCE="$1"
+  DEST="$2"
+  FORCE="$3"
+  INDEX="$4"
+  IMG=("$SOURCE"/*.jpg)
 
-  html_head "$index" "Galerie HTML" "galerie_style.css"
-  html_title "$index" "Galerie d'images"
-  generate_galerie "$source" "$dest" "$force" "$index"
-  html_tail "$index"
+  html_head "$INDEX" "Galerie HTML" "galerie_style.css"
+  html_title "$INDEX" "Galerie d'images"
+  generate_galerie
+  html_tail "$INDEX"
 }
