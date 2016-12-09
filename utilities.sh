@@ -1,16 +1,20 @@
 #! /bin/sh
 
 html_head () {
-cat << EOF > "$1"
+  pagename="$1"
+  title="$2"
+  css="$3"
+
+cat << EOF > "$pagename"
 <!DOCTYPE html>
   <html>
       <head>
           <meta charset=utf-8 />
-          <title>$2</title>
+          <title>$title</title>
           <style>
 EOF
-cat "$3" >> "$1"
-cat << EOF >> "$1"
+cat "$css" >> "$pagename"
+cat << EOF >> "$pagename"
           </style>
       </head>
 
@@ -19,72 +23,102 @@ EOF
 }
 
 html_title () {
-cat << EOF >> "$1"
-       <h1>$2</h1>
+  pagename="$1"
+  title="$2"
+
+cat << EOF >> "$pagename"
+       <h1>$title</h1>
 
 EOF
 }
 
 html_tail () {
-cat << EOF >> "$1"
+  pagename="$1"
+
+cat << EOF >> "$pagename"
     </body>
 </html>
 EOF
 }
 
 generate_img_fragment () {
-name="$(basename -s .jpg "$2")"
-cat << EOF >> "$1"
+  index="$1"
+  source="$2"
+  imgname="$(basename -s .jpg "$2")"
+  pagename="$3/$imgname.html"
+
+cat << EOF >> "$index"
         <div class="imageframe">
-        <a href="$3/$name.html">
-        <img class="image" src=$2 alt=$name>
+        <a href="$pagename">
+        <img class="image" src=$source alt=$imgname>
         </a><br>
-        <span class="legend">$name</span>
+        <span class="legend">$imgname</span>
         </div>
 
 EOF
 }
 
 generate_img_html () {
-  pagename=""$2"/"$3".html"
-  html_head "$pagename" "$3" "image_style.css"
-  html_title "$pagename" "$3"
+  imgsource="$1"
+  imgname="$3"
+  pagename="$2/$imgname.html"
+  index="$4"
+
+  html_head "$pagename" "$imgname" "image_style.css"
+  html_title "$pagename" "$imgname"
+
 cat << EOF >> "$pagename"
         <div class="imageframe">
-        <img class="image" src=$1/$3.jpg alt=$3><br>
+        <img class="image" src=$imgsource alt=$imgname><br>
         </div>
 
-        <ul class="navbar">
-        <li><a href="$4">Retour à la galerie</a></li>
+        <ul>
+        <li><a href="$index">Retour à la galerie</a></li>
         </ul>
 
 EOF
+
   html_tail "$pagename"
 }
 
 generate_galerie () {
-    for img in "$1/"*.jpg;
+  source="$1"
+  dest="$2"
+  force="$3"
+  index="$4"
+
+    for img in "$source"/*.jpg;
     do
       if [ -r "$img" ];
       then
-        if [ ! -d ""$2"/vignette" ];
+
+        if [ ! -d "$dest/vignette" ];
           then
-            mkdir ""$2"/vignette"
+            mkdir "$dest/vignette"
           fi
-          vignette=""$2"/vignette/$(basename "$img")"
-          if [ ! -f "$vignette" ] || [ "$3" -eq 1 ];
+
+          vignette="$dest/vignette/$(basename "$img")"
+
+          if [ ! -f "$vignette" ] || [ "$force" -eq 1 ];
           then
             gmic "$img" -cubism , -resize 200,200 -output "$vignette"
           fi
-        generate_img_fragment "$4" "$vignette" "$2"
-        generate_img_html "$1" "$2" "$(basename -s .jpg "$vignette")" "$4"
+
+        generate_img_fragment "$index" "$vignette" "$dest"
+        generate_img_html "$source" "$dest" "$(basename -s .jpg "$vignette")" "$index"
+
       fi
     done
 }
 
 galerie_main () {
-  html_head "$4" "Galerie HTML" "galerie_style.css"
-  html_title "$4" "Galerie d'images"
-  generate_galerie "$1" "$2" "$3" "$4"
-  html_tail "$4"
+  source="$1"
+  dest="$2"
+  force="$3"
+  index="$4"
+
+  html_head "$index" "Galerie HTML" "galerie_style.css"
+  html_title "$index" "Galerie d'images"
+  generate_galerie "$source" "$dest" "$force" "$index"
+  html_tail "$index"
 }
