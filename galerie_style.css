@@ -9,13 +9,19 @@ h1 {
   font-family: Verdana, Sans-Serif;
 }
 
-div.imageframe {
+div.frame {
   float: left;
   background-color: white;
   border: 1px dashed #C0C0C0;
   padding: 15px;
   margin: 8px;
   text-align: center;
+}
+
+div.imageframe {
+  float: left;
+  background-color: white;
+  padding: 10px;
 }
 
 .image {
