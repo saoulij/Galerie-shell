@@ -38,8 +38,8 @@ case $key in
     ;;
   --index)
     filename="$(basename "$2")"
-    extension="${filename##*.}"
-    if [ "$extension" != ".jpg" ]; then
+    extension=$([[ "$filename" = *.* ]] && echo ".${filename##*.}" || echo '')
+    if [ "$extension" != ".html" ]; then
       echo "$2: extension should be '.html'"
       exit 1
     fi
