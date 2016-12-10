@@ -34,10 +34,11 @@ EOF
 
 generate_img_fragment () {
   cat << EOF >> "$INDEX"
+        <div class="frame">
         <div class="imageframe">
         <a href="$DEST/$imgname.html">
         <img class="image" src=$vignette alt=$imgname>
-        </a><br>
+        </a></div><br>
         <span class="legend">$imgname</span>
         </div>
 
@@ -47,7 +48,7 @@ EOF
 generate_navi () {
   if [ $i -ne 0 ]; then
     p=$(($i-1))
-    prec="$DEST/$(basename -s .jpg ${IMG[p]}).html"
+    prec="$DEST/$(basename -s .jpg "${IMG[p]}").html"
     cat << EOF >> "$1"
           <li><a href="$prec">Précédent</a></li>
 EOF
@@ -55,7 +56,7 @@ fi
 
   if [ $i -ne $(( ${#IMG[@]} - 1 )) ]; then
     s=$(($i+1))
-    suiv="$DEST/$(basename -s .jpg ${IMG[s]}).html"
+    suiv="$DEST/$(basename -s .jpg "${IMG[s]}").html"
     cat << EOF >> "$1"
         <li><a href="$suiv">Suivant</a></li>
 EOF
