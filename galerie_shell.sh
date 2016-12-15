@@ -50,6 +50,8 @@ esac
 shift
 done
 
+INDEX="$DEST/$INDEX"
+
 if [ $HELP -ne 0 ]
 then
   echo "usage: ./galerie_shell.sh [--source REP] [--dest REP] [--verb] [--force] [--help] [--index FICHIER]
@@ -75,7 +77,7 @@ fi
 
 . "$DIR"/utilities.sh
 
-galerie_main "$SOURCE" "$DEST" "$FORCE" "$DEST/$INDEX"
+galerie_main
 
 if [ -f "$INDEX" ]
 then
