@@ -1,7 +1,7 @@
 #! /bin/sh
 
-# Test sur un répertoire source dont l'un des fichiers contient $
-# l'autre contient des charactères spéciaux.
+# Teste si les vignette ne sont pas recrées si elles existent
+# Teste ensuite si l'option --force force la création de nouvelles vignettes
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 PATH="$HERE/..:$PATH"
