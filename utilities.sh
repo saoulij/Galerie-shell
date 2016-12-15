@@ -56,16 +56,16 @@ EOF
 generate_navi () {
   if [ "$VERB" -eq 1 ]; then echo "generation de la navigation sur la page $(basename "$1")"; fi
 
-  if [ $i -ne 0 ]; then
-    p=$(($i-1))
+  if [ "$i" -ne 0 ]; then
+    p=($i-1)
     prec="$DEST/$(basename -s .jpg "${IMG[p]}").html"
     cat << EOF >> "$1"
           <li><a href="$prec">Précédent</a></li>
 EOF
 fi
 
-  if [ $i -ne $(( ${#IMG[@]} - 1 )) ]; then
-    s=$(($i+1))
+  if [ "$i" -ne $(( ${#IMG[@]} - 1 )) ]; then
+    s=($i+1)
     suiv="$DEST/$(basename -s .jpg "${IMG[s]}").html"
     cat << EOF >> "$1"
         <li><a href="$suiv">Suivant</a></li>
