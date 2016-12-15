@@ -10,7 +10,7 @@ rm -fr source dest
 mkdir -p source dest
 
 make-img.sh source/image-\$.jpg
-make-img.sh "source/image()-è|_+%^!.jpg"
+make-img.sh "source/image()-è|_+#%^!.jpg"
 
 galerie-shell.sh --source source --dest dest
 
