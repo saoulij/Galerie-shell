@@ -114,7 +114,13 @@ generate_galerie () {
           vignette="$DEST/vignette/$(basename "${IMG[i]}")"
           if [ ! -f "$vignette" ] || [ "$FORCE" -eq 1 ];
           then
-            gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette"
+            if [ "$VERB" -eq 1 ]
+            then
+                gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette";
+            else
+                gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette" 2> /dev/null;
+            fi
+
             if [ "$VERB" -eq 1 ]; then echo "creation de la vignette de l'image $imgname"; fi
           fi
 
