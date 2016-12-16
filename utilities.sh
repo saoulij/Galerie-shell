@@ -1,7 +1,7 @@
 #! /bin/bash
 
 html_head () {
-  if [ "$VERB" -eq 1 ]; then echo "creation de $(basename "$1") et ajout de l'entete"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$1"): creation et ajout de l'entete"; fi
 
   cat << EOF > "$1"
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ EOF
 }
 
 html_title () {
-  if [ "$VERB" -eq 1 ]; then echo "ajout d'un titre a $(basename "$1")"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$1"): ajout du titre"; fi
 
   cat << EOF >> "$1"
        <h1>$2</h1>
@@ -30,7 +30,7 @@ EOF
 }
 
 html_tail () {
-  if [ "$VERB" -eq 1 ]; then echo "ajout du code fin a $(basename "$1")"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$1"): ajout du pied"; fi
 
   cat << EOF >> "$1"
       </body>
@@ -39,7 +39,7 @@ EOF
 }
 
 generate_img_fragment () {
-  if [ "$VERB" -eq 1 ]; then echo "ajout de la vignette $(basename "$vignette") a $(basename "$INDEX")"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$INDEX"): ajout de la vignette $(basename "$vignette")"; fi
 
   cat << EOF >> "$INDEX"
         <div class="frame">
@@ -54,17 +54,19 @@ EOF
 }
 
 generate_navi () {
-  if [ "$VERB" -eq 1 ]; then echo "generation de la navigation sur la page $(basename "$1")"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$1"): generation de la navigation"; fi
 
-  if [ "$i" -ne 0 ]; then
+  if [ "$i" -ne 0 ];
+  then
     p=($i-1)
     prec="$DEST/$(basename -s .jpg "${IMG[p]}").html"
     cat << EOF >> "$1"
           <li><a href="$prec">Précédent</a></li>
 EOF
-fi
+  fi
 
-  if [ "$i" -ne $(( ${#IMG[@]} - 1 )) ]; then
+  if [ "$i" -ne $(( ${#IMG[@]} - 1 )) ];
+  then
     s=($i+1)
     suiv="$DEST/$(basename -s .jpg "${IMG[s]}").html"
     cat << EOF >> "$1"
@@ -80,12 +82,10 @@ EOF
 }
 
 generate_img_html () {
-  if [ "$VERB" -eq 1 ]; then echo "generation de la page $(basename "$1")"; fi
-
   html_head "$1" "$imgname" "image_style.css"
   html_title "$1" "$imgname"
 
-  if [ "$VERB" -eq 1 ]; then echo "ajout de $imgname a $(basename "$1")"; fi
+  if [ "$VERB" -eq 1 ]; then echo "$(basename "$1"): ajout de $imgname"; fi
   cat << EOF >> "$1"
         <div class="imageframe">
         <img class="image" src=$SOURCE/$imgname.jpg alt=$imgname><br>
@@ -116,12 +116,11 @@ generate_galerie () {
           then
             if [ "$VERB" -eq 1 ]
             then
+                echo "creation de la vignette de l'image $imgname"
                 gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette";
             else
                 gmic "${IMG[i]}" -cubism , -resize 200,200 -output "$vignette" 2> /dev/null;
             fi
-
-            if [ "$VERB" -eq 1 ]; then echo "creation de la vignette de l'image $imgname"; fi
           fi
 
       generate_img_fragment
