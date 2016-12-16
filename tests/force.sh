@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Teste si les vignette ne sont pas recrées si elles existent
 # Teste ensuite si l'option --force force la création de nouvelles vignettes
@@ -13,44 +13,37 @@ make-img.sh source/image-1.jpg
 
 galerie-shell.sh --source source --dest dest
 
-if [ -f dest/index.html ]
-then
-    echo "Now run 'firefox dest/index.html' to check the result"
-else
-    echo "ERROR: dest/index.html was not generated"
-fi
-
 ##################
-echo "Generating, normal (no --force)"
+echo -en "\033[1m\033[43m Generating, normal (no --force) \033[0m"
 sleep 1;
 
 date1=$(stat --format '%Y' dest/vignette/image-1.jpg)
 
-galerie-shell.sh --source source --dest dest
+galerie-shell.sh --source source --dest dest > /dev/null
 
 date2=$(stat --format '%Y' dest/vignette/image-1.jpg)
 
-if [ $date1 -eq $date2 ]
+if [ "$date1" -eq "$date2" ]
 then
-    echo "[SUCCESS]: vignettes not regenerated."
+    echo -e "\033[1m\033[42m [SUCCESS] \033[0m: vignettes not regenerated."
 else
-    echo "[FAILED]: vignettes regenerated!"
+    echo -e "\033[1m\033[41m [FAILED] \033[0m: vignettes regenerated!"
 fi
 
 ###################
-echo "Generating, use --force"
+echo -en "\033[1m\033[43m Generating, use --force \033[0m"
 sleep 1;
 
 date1=$(stat --format '%Y' dest/vignette/image-1.jpg)
 
-galerie-shell.sh --source source --dest dest --force
+galerie-shell.sh --source source --dest dest --force > /dev/null
 
 date2=$(stat --format '%Y' dest/vignette/image-1.jpg)
 
-if [ $date1 -eq $date2 ]
+if [ "$date1" -eq "$date2" ]
 then
-    echo "[FAILED]: vignettes not regenerated!"
+    echo -e "\033[1m\033[41m [FAILED] \033[0m: vignettes not regenerated!"
 else
-    echo "[SUCCESS]: vignettes regenerated."
+    echo -e "\033[1m\033[42m [SUCCESS] \033[0m: vignettes regenerated."
 fi
 
