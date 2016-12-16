@@ -19,12 +19,12 @@ case $key in
       echo "$2: no such directory"
       exit 1
     fi
-    SOURCE="$(cd "$2"; pwd)"
+    SOURCE="$(cd "$2" || exit ; pwd)"
     shift
     ;;
   --dest)
     if [ ! -d "$2" ]; then mkdir -p "$2"; fi
-    DEST="$(cd "$2"; pwd)"
+    DEST="$(cd "$2" || exit ; pwd)"
     shift
     ;;
   --verb)
@@ -75,6 +75,8 @@ then
   echo "INDEX=$INDEX"
 fi
 
+# load utilities, see: https://github.com/koalaman/shellcheck/wiki/SC1090
+# shellcheck source=utilities.sh
 . "$DIR"/utilities.sh
 
 galerie_main
