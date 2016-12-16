@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset=utf-8 />
+      <title>Projet Shell-HTML</title>
+    </head>
+
+    <body>
+      <h1>Projet Shell-HTML</h1>
+
+      <h2></h2>
+
+      Le but de ce projet est la génération d'une galerie d'images à partir d'un répertoire d'images sources.<br>
+      Le programme possède six options:
+      <ul>
+        <li><i>--source</i>: choix du répertoire source contenant les images à présenter dans la galerie,</li>
+        <li><i>--dest</i>: choix du répertoire destination, existant ou non,</li>
+        <li><i>--index</i>: choix du nom du fichier où sera généré le code de la galerie,</li>
+        <li><i>--force</i>: forcer la création des vignettes,</li>
+        <li><i>--help</i> affichage de l'aide,</li>
+        <li><i>--verb</i>: mode verbeux détaillant le déroulant du programme.</li>
+      </ul>
+
+      Le code du projet est composé de deux scripts shell et de deux feuilles de style CSS.<br>
+
+      Le script <b>galerie_shell.sh</b> prépare la génération de la galerie.
+      Il permet la récupération des options et arguments passés en ligne de commande.
+      Ensuite, le script <b>utilities.sh</b> génère la galerie d'image.
+
+      <h3>Le rôle des fonctions de utilities.sh</h3>
+      <ul>
+        <li><b>html_head</b></li>
+        Génère l'entête HTML d'un fichier donné en paramètre avec le titre de la page.<br>
+        La feuille de style CSS est concaténée dans l'entête.
+        Elle peut être soit celle de la galerie "galerie_style.css", soit celle des images en taille réelle "image_style.css".
+
+        <li><b>html_title</b></li>
+        Génère un titre sur le fichier HTML donné en paramètre.
+
+        <li><b>html_tail</b></li>
+        Génère le pied de page sur le fichier HTML donné en paramètre.
+
+        <li><b>generate_img_fragment</b></li>
+        Génère le fragment de code HTML pour afficher la vignette dans la galerie.
+
+        <li><b>generate_navi</b></li>
+        Génère la navigation entre les pages avec les images en taille réelle : boutons "Précèdent", "Suivant" et "Retour à la galerie"
+
+        <li><b>generate_img_html</b></li>
+        Correspond à la fonction "galerie_main" mais pour les images en taille réelle.<br>
+        Génère la page HTML associée à l'image en taille réelle.
+
+        <li><b>generate_galerie</b></li>
+        Génère les vignettes associées aux images sources.
+        Affichage de chaque vignette dans la galerie et création de la page associée à l'image réelle.
+
+        <li><b>galerie main</b></li>
+        Génère la galerie d'images.
+      </ul>
+
+    </body>
+  </html>
